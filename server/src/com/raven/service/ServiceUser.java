@@ -88,15 +88,12 @@ public class ServiceUser {
             data = new Model_User_Account(userID, userName, gender, image, true);
         }
     } catch (SQLException e) {
-        // Handle any SQL exception here or log it
         e.printStackTrace();
     } finally {
-        // Close ResultSet and PreparedStatement in a finally block to ensure they are always closed
         if (r != null) {
             try {
                 r.close();
             } catch (SQLException e) {
-                // Log or handle the exception
                 e.printStackTrace();
             }
         }
@@ -130,6 +127,7 @@ public class ServiceUser {
         return list;
     }
 
+
     private boolean checkUserStatus(int userID) {
         List<Model_Client> clients = Service.getInstance(null).getListClient();
         for (Model_Client c : clients) {
@@ -141,10 +139,7 @@ public class ServiceUser {
     }
 
        //  SQL
-    private final String LOGIN = "SELECT u.UserID, ua.UserName, ua.Gender, ua.ImageString " +
-    "FROM [user] u " +
-    "JOIN user_account ua ON u.UserID = ua.UserID " +
-    "WHERE u.UserName = ? AND u.Password = ? AND ua.[Status] = '1'";
+    private final String LOGIN = "SELECT u.UserID, ua.UserName, ua.Gender, ua.ImageString " + "FROM [user] u " +"JOIN user_account ua ON u.UserID = ua.UserID " +"WHERE u.UserName = ? AND u.Password = ? AND ua.[Status] = '1'";
     private final String SELECT_USER_ACCOUNT = "SELECT UserID, UserName, Gender, ImageString " +
     "FROM user_account " +
     "WHERE [Status] = '1' AND UserID <> ?";

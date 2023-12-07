@@ -1,5 +1,6 @@
 package com.raven.component;
 
+import com.raven.model.Label_Name;
 import com.raven.model.Model_Login;
 import com.raven.model.Model_User_Account;
 import java.awt.Color;
@@ -12,7 +13,6 @@ public class Chat_Title extends javax.swing.JPanel {
     public Model_User_Account getUser() {
         return user;
     }
-    
     private Model_User_Account user;
 
     public Chat_Title() {
@@ -22,31 +22,14 @@ public class Chat_Title extends javax.swing.JPanel {
     public void setUserName(Model_User_Account user) {
         this.user = user;
         lbName.setText(user.getUserName());
+        lbName1.setText(Label_Name.name);
         if (user.isStatus()) {
             statusActive();
         } else {
             setStatusText("Offline");
         }
     }
-//    public void setUserNamelogin(Model_Login userlogin ) throws SQLException{  
-//        PreparedStatement p = null;
-//        p.setString(1, userlogin.getUserName());
-//        lbName1.setText(userlogin.getUserName());
-//        if (user.isStatus()) {
-//            statusActive();
-//        } else {
-//            setStatusText("Offline");
-//        }
-//    }
-        public void setUserNamelogin(Model_User_Account user) {
-        this.user = user;
-        lbName1.setText(user.getUserName());
-        if (user.isStatus()) {
-            statusActive();
-        } else {
-            setStatusText("Offline");
-        }
-    }
+
     public void updateUser(Model_User_Account user) {
         if (this.user == user) {
             lbName.setText(user.getUserName());

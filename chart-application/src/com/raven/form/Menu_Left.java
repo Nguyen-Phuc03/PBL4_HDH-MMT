@@ -3,6 +3,7 @@ package com.raven.form;
 import com.raven.component.Item_People;
 import com.raven.event.EventMenuLeft;
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_Group;
 import com.raven.model.Model_User_Account;
 import com.raven.swing.ScrollBar;
 import java.awt.Component;
@@ -20,6 +21,7 @@ public class Menu_Left extends javax.swing.JPanel {
     }
 
     private void init() {
+        
         sp.setVerticalScrollBar(new ScrollBar());
         menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
         userAccount = new ArrayList<>();
@@ -85,24 +87,14 @@ public class Menu_Left extends javax.swing.JPanel {
         refreshMenuList();
     }
 
-    private void showGroup() {
-        //  test data
-        menuList.removeAll();
-        for (Model_User_Account d : userAccount) {
+   private void showGroup() {
+       menuList.removeAll();
+      for (Model_User_Account d : userAccount) {
             menuList.add(new Item_People(d), "wrap");
         }
         refreshMenuList();
+       
     }
-
-    private void showBox() {
-        //  test data
-        menuList.removeAll();
-        for (int i = 0; i < 10; i++) {
-            menuList.add(new Item_People(null), "wrap");
-        }
-        refreshMenuList();
-    }
-
     private void refreshMenuList() {
         menuList.repaint();
         menuList.revalidate();
@@ -186,7 +178,7 @@ public class Menu_Left extends javax.swing.JPanel {
         if (!menuMessage.isSelected()) {
             menuMessage.setSelected(true);
             menuGroup.setSelected(false);
-            
+           
             showMessage();
         }
     }//GEN-LAST:event_menuMessageActionPerformed
@@ -194,7 +186,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private void menuGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGroupActionPerformed
 
             menuMessage.setSelected(false);
-            menuGroup.setSelected(true);           
+            menuGroup.setSelected(true);   
             showGroup();
     }//GEN-LAST:event_menuGroupActionPerformed
 

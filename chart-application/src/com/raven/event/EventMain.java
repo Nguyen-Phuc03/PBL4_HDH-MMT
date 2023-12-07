@@ -1,5 +1,6 @@
 package com.raven.event;
 
+import com.raven.model.Model_Group;
 import com.raven.model.Model_User_Account;
 
 public interface EventMain {
@@ -11,4 +12,6 @@ public interface EventMain {
     public void selectUser(Model_User_Account user);
 
     public void updateUser(Model_User_Account user);
+
+    public void selectUser(Model_Group group);
 }

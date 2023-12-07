@@ -31,18 +31,22 @@ public class ServiceFIle {
     }
 
     public Model_File addFileReceiver(String fileExtension) throws SQLException {
-        Model_File data;
-        PreparedStatement p = con.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
+    Model_File data;
+    try (PreparedStatement p = con.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
         p.setString(1, fileExtension);
         p.execute();
-        ResultSet r = p.getGeneratedKeys();
-        r.first();
-        int fileID = r.getInt(1);
-        data = new Model_File(fileID, fileExtension);
-        r.close();
-        p.close();
-        return data;
-    }
+        try (ResultSet r = p.getGeneratedKeys()) {
+            if (r.next()) { 
+                int fileID = r.getInt(1);
+                data = new Model_File(fileID, fileExtension);
+            } else {
+                throw new SQLException("Failed to retrieve generated keys.");
+            }
+        }
+    } 
+    return data;
+}
+
 
     public void updateBlurHashDone(int fileID, String blurhash) throws SQLException {
         PreparedStatement p = con.prepareStatement(UPDATE_BLUR_HASH_DONE);
@@ -64,16 +68,21 @@ public class ServiceFIle {
     }
 
     public Model_File getFile(int fileID) throws SQLException {
-        PreparedStatement p = con.prepareStatement(GET_FILE_EXTENSION);
+    Model_File data;
+    try (PreparedStatement p = con.prepareStatement(GET_FILE_EXTENSION)) {
         p.setInt(1, fileID);
-        ResultSet r = p.executeQuery();
-        r.first();
-        String fileExtension = r.getString(1);
-        Model_File data = new Model_File(fileID, fileExtension);
-        r.close();
-        p.close();
-        return data;
-    }
+        try (ResultSet r = p.executeQuery()) {
+            if (r.next()) { 
+                String fileExtension = r.getString(1);
+                data = new Model_File(fileID, fileExtension);
+            } else {
+                throw new SQLException("No file found with ID: " + fileID);
+            }
+        }
+    } 
+    return data;
+}
+
 
     public synchronized Model_File initFile(int fileID) throws IOException, SQLException {
         Model_File file;
@@ -150,12 +159,11 @@ public class ServiceFIle {
         return new File(PATH_FILE + file.getFileID() + file.getFileExtension());
     }
 
-    //  SQL
     private final String PATH_FILE = "server_data/";
     private final String INSERT = "INSERT INTO files (FileExtension) VALUES (?)";
-    private final String UPDATE_BLUR_HASH_DONE = "UPDATE files SET BlurHash = ?, [Status] = '1' WHERE FileID = ?";
-    private final String UPDATE_DONE = "UPDATE files SET [Status] = '1' WHERE FileID = ?;";
-    private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM files WHERE FileID = ?";
+    private final String UPDATE_BLUR_HASH_DONE = "UPDATE files SET BlurHash=?, Status='1' WHERE FileID=?";
+    private final String UPDATE_DONE = "UPDATE files SET Status='1' WHERE FileID=? ";
+    private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM files WHERE FileID=?";
     //  Instance
     private final Connection con;
     private final Map<Integer, Model_File_Receiver> fileReceivers;

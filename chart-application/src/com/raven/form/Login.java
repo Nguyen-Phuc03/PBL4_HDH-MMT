@@ -3,6 +3,7 @@ package com.raven.form;
 import com.raven.event.EventLogin;
 import com.raven.event.EventMessage;
 import com.raven.event.PublicEvent;
+import com.raven.model.Label_Name;
 import com.raven.model.Model_Login;
 import com.raven.model.Model_Message;
 import com.raven.model.Model_Register;
@@ -20,7 +21,7 @@ public class Login extends javax.swing.JPanel {
     private void init() {
         PublicEvent.getInstance().addEventLogin(new EventLogin() {
             @Override
-            public void login(Model_Login data) {
+            public void login(Model_Login data,String name) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -31,6 +32,7 @@ public class Login extends javax.swing.JPanel {
                                 if (os.length > 0) {
                                     boolean action = (Boolean) os[0];
                                     if (action) {
+                                        Label_Name.name=name;
                                         Service.getInstance().setUser(new Model_User_Account(os[1]));
                                         PublicEvent.getInstance().getEventMain().showLoading(false);
                                         PublicEvent.getInstance().getEventMain().initChat();

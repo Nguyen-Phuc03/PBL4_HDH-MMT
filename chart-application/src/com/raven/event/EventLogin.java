@@ -5,7 +5,7 @@ import com.raven.model.Model_Register;
 
 public interface EventLogin {
 
-    public void login(Model_Login data);
+    public void login(Model_Login data,String name);
 
     public void register(Model_Register data, EventMessage message);
 

@@ -42,15 +42,20 @@ public class Model_Package_Sender {
     private byte[] data;
     private boolean finish;
 
-    public JSONObject toJsonObject() {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("fileID", fileID);
-            json.put("data", data);
-            json.put("finish", finish);
-            return json;
-        } catch (JSONException e) {
-            return null;
-        }
+public JSONObject toJsonObject() {
+    try {
+        JSONObject json = new JSONObject();
+        json.put("fileID", fileID);
+        json.put("data", data);
+        json.put("finish", finish);
+        return json;
+    } catch (JSONException e) {
+        // Print the stack trace or log a more informative error message
+        e.printStackTrace();
+        System.err.println("Error creating JSONObject: " + e.getMessage());
+        return null;
     }
 }
+
+}
+

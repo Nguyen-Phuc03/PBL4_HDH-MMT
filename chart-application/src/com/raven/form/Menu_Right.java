@@ -5,6 +5,9 @@
  */
 package com.raven.form;
 
+import com.raven.model.Model_Group;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author RAVEN
@@ -45,6 +48,11 @@ public class Menu_Right extends javax.swing.JPanel {
         menuButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
         menuButton1.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
         menuButton1.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
+        menuButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuButton1ActionPerformed(evt);
+            }
+        });
         menu.add(menuButton1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -60,6 +68,10 @@ public class Menu_Right extends javax.swing.JPanel {
                 .addGap(0, 488, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void menuButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton1ActionPerformed
+
+    }//GEN-LAST:event_menuButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -64,8 +64,6 @@ public class Item_People extends javax.swing.JPanel {
         lbStatus = new javax.swing.JLabel();
         activeStatus = new com.raven.swing.ActiveStatus();
 
-        setBackground(new java.awt.Color(242, 242, 242));
-
         imageAvatar1.setBorderSize(0);
         imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/user.png"))); // NOI18N
 
@@ -74,7 +72,7 @@ public class Item_People extends javax.swing.JPanel {
 
         lbStatus.setFont(new java.awt.Font("sansserif", 2, 12)); // NOI18N
         lbStatus.setForeground(new java.awt.Color(117, 117, 117));
-        lbStatus.setText("New User");
+        lbStatus.setText("User");
 
         activeStatus.setActive(true);
 

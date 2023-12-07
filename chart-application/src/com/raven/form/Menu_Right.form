@@ -72,6 +72,9 @@
               <Image iconType="3" name="/com/raven/icon/create_group.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuButton1ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

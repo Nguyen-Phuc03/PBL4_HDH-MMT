@@ -45,16 +45,21 @@ public class Model_Receive_Image {
     }
 
     public Model_Receive_Image(Object json) {
-        JSONObject obj = (JSONObject) json;
-        try {
+    JSONObject obj = (JSONObject) json;
+    try {
+        if (obj.has("fileID") && obj.has("image") && obj.has("width") && obj.has("height")) {
             fileID = obj.getInt("fileID");
             image = obj.getString("image");
             width = obj.getInt("width");
             height = obj.getInt("height");
-        } catch (JSONException e) {
-            System.err.println(e);
+        } else {
+            System.err.println("One or more keys are missing in the JSON object.");
         }
+    } catch (JSONException e) {
+        e.printStackTrace();
     }
+}
+
 
     private int fileID;
     private String image;
@@ -62,15 +67,20 @@ public class Model_Receive_Image {
     private int height;
 
     public JSONObject toJsonObject() {
+        JSONObject json = new JSONObject();
+
         try {
-            JSONObject json = new JSONObject();
             json.put("fileID", fileID);
-            json.put("image", image);
+            if (image != null) {
+                json.put("image", image);
+            }
+
             json.put("width", width);
             json.put("height", height);
-            return json;
         } catch (JSONException e) {
-            return null;
+            e.printStackTrace();
         }
+
+        return json;
     }
 }
