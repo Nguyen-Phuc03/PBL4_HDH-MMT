@@ -29,7 +29,13 @@ public class Model_File_Sender {
     public void setAccFile(RandomAccessFile accFile) {
         this.accFile = accFile;
     }
+    public String getFileName() {
+        return fileName;
+    }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
     public long getFileSize() {
         return fileSize;
     }
@@ -43,6 +49,7 @@ public class Model_File_Sender {
         this.file = file;
         this.accFile = new RandomAccessFile(file, "r");
         this.fileSize = accFile.length();
+         this.fileName = file.getName();
     }
 
     public Model_File_Sender() {
@@ -50,6 +57,7 @@ public class Model_File_Sender {
 
     private Model_File data;
     private File file;
+    private String fileName;
     private RandomAccessFile accFile;
     private long fileSize;
 

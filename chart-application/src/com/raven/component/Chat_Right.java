@@ -29,8 +29,9 @@ public class Chat_Right extends javax.swing.JLayeredPane {
        // txt.setImage(false, image);
     }
 
-    public void setFile(String fileName, String fileSize) {
-        txt.setFile(fileName, fileSize);
+
+    public void setFile(Model_File_Sender fileSender,String fileName, String fileSize) {
+        txt.setFile(true,fileSender,fileName, fileSize);
     }
 
     public void setEmoji(Icon icon) {

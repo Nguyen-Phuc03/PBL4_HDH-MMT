@@ -38,6 +38,29 @@ public class Model_Receive_Message {
         this.dataImage = dataImage;
     }
 
+    public Model_Receive_File getDataFile() {
+        return dataFile;
+    }
+
+    public void setDataFile(Model_Receive_File dataFile) {
+        this.dataFile = dataFile;
+    }
+    
+    
+    public String getFileName() {
+        if (dataFile != null) {
+            return dataFile.getFileName();
+        }
+        return null;
+    }
+
+    public long getFileSize() {
+        if (dataFile != null) {
+            return dataFile.getFileSize();
+        }
+        return 0;
+    }
+
     public Model_Receive_Message(Object json) {
         JSONObject obj = (JSONObject) json;
         try {
@@ -47,16 +70,18 @@ public class Model_Receive_Message {
             if (!obj.isNull("dataImage")) {
                 dataImage = new Model_Receive_Image(obj.get("dataImage"));
             }
+            if (!obj.isNull("dataFile")) {
+                dataFile = new Model_Receive_File(obj.get("dataFile"));
+            }
         } catch (JSONException e) {
             System.err.println(e);
         }
     }
-
     private MessageType messageType;
     private int fromUserID;
     private String text;
     private Model_Receive_Image dataImage;
-
+    private Model_Receive_File dataFile;
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
@@ -65,6 +90,9 @@ public class Model_Receive_Message {
             json.put("text", text);
             if (dataImage != null) {
                 json.put("dataImage", dataImage.toJsonObject());
+            }
+            if (dataFile != null) {
+                json.put("dataFile", dataFile.toJsonObject());
             }
             return json;
         } catch (JSONException e) {

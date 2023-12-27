@@ -78,6 +78,7 @@ public class Model_File_Receiver {
 
     private int fileID;
     private File file;
+    private String fileName;
     private long fileSize;
     private String fileExtention;
     private RandomAccessFile accFile;

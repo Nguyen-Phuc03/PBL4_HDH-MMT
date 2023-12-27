@@ -41,7 +41,6 @@ public class Model_Package_Sender {
     private int fileID;
     private byte[] data;
     private boolean finish;
-
 public JSONObject toJsonObject() {
     try {
         JSONObject json = new JSONObject();

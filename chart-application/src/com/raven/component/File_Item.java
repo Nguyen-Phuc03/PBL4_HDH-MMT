@@ -3,6 +3,7 @@ package com.raven.component;
 import com.raven.event.EventFileReceiver;
 import com.raven.event.EventFileSender;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
 import com.raven.swing.blurHash.BlurHash;
@@ -12,13 +13,14 @@ import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-public class Image_Item extends javax.swing.JLayeredPane {
+public class File_Item extends javax.swing.JLayeredPane {
 
-    public Image_Item() {
+    public File_Item() {
         initComponents();
     }
 
-    public void setImage(Icon image, Model_File_Sender fileSender) {
+    public void setFile(File document, Model_File_Sender fileSender) {
+           try {
         fileSender.addEvent(new EventFileSender() {
             @Override
             public void onSending(double percentage) {
@@ -34,40 +36,36 @@ public class Image_Item extends javax.swing.JLayeredPane {
                 progress.setVisible(false);
             }
         });
-        pic.setImage(image);
+        
+        // Assuming 'document' is a java.io.File instance representing the document
+        Service.getInstance().addFile(document, fileSender.getMessage());
+        
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 
-    public void setImage(Model_Receive_Image dataImage) {
-        int width = dataImage.getWidth();
-        int height = dataImage.getHeight();
-        int[] data = BlurHash.decode(dataImage.getImage(), width, height, 1);
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        img.setRGB(0, 0, width, height, data, 0, width);
-        Icon icon = new ImageIcon(img);
-        pic.setImage(icon);
-        try {
-            Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
-                @Override
-                public void onReceiving(double percentage) {
-                    progress.setValue((int) percentage);
-                }
+  public void setDocument(Model_Receive_File dataDocument) {
+    try {
+        Service.getInstance().addFileReceiver(dataDocument.getFileID(), new EventFileReceiver() {
+            @Override
+            public void onReceiving(double percentage) {
+                progress.setValue((int) percentage);
+            }
 
-                @Override
-                public void onStartReceiving() {
+            @Override
+            public void onStartReceiving() {
+            }
 
-                }
-
-                @Override
-                public void onFinish(File file) {
-                    progress.setVisible(false);
-                    pic.setImage(new ImageIcon(file.getAbsolutePath()));
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFinish(File file) {
+                progress.setVisible(false);               
+            }
+        });
+    } catch (IOException e) {
+        e.printStackTrace();
     }
-    
+}  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

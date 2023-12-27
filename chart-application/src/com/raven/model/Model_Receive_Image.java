@@ -53,7 +53,7 @@ public class Model_Receive_Image {
             width = obj.getInt("width");
             height = obj.getInt("height");
         } else {
-            System.err.println("One or more keys are missing in the JSON object.");
+           // System.out.println("lỗi ở receive_image");
         }
     } catch (JSONException e) {
         e.printStackTrace();

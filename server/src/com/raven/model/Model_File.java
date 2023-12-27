@@ -9,7 +9,14 @@ public class Model_File {
     public void setFileID(int fileID) {
         this.fileID = fileID;
     }
+     
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
+    public String getFileName() {
+        return fileName;
+    }   
     public String getFileExtension() {
         return fileExtension;
     }
@@ -27,5 +34,6 @@ public class Model_File {
     }
 
     private int fileID;
+     private String fileName;
     private String fileExtension;
 }

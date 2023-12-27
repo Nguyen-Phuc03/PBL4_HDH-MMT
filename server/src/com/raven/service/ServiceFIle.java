@@ -6,6 +6,7 @@ import com.raven.model.Model_File;
 import com.raven.model.Model_File_Receiver;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Package_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_Send_Message;
 import com.raven.swing.blurHash.BlurHash;
@@ -13,7 +14,9 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +48,7 @@ public class ServiceFIle {
         }
     } 
     return data;
-}
+}   
 
 
     public void updateBlurHashDone(int fileID, String blurhash) throws SQLException {
@@ -62,7 +65,6 @@ public class ServiceFIle {
         p.execute();
         p.close();
     }
-
     public void initFile(Model_File file, Model_Send_Message message) throws IOException {
         fileReceivers.put(file.getFileID(), new Model_File_Receiver(message, toFileObject(file)));
     }
@@ -81,20 +83,18 @@ public class ServiceFIle {
         }
     } 
     return data;
-}
-
-
+}   
     public synchronized Model_File initFile(int fileID) throws IOException, SQLException {
         Model_File file;
         if (!fileSenders.containsKey(fileID)) {
-            file = getFile(fileID);
+            file = getFile(fileID);             
             fileSenders.put(fileID, new Model_File_Sender(file, new File(PATH_FILE + fileID + file.getFileExtension())));
         } else {
             file = fileSenders.get(fileID).getData();
         }
         return file;
     }
-
+  
     public byte[] getFileData(long currentLength, int fileID) throws IOException, SQLException {
         initFile(fileID);
         return fileSenders.get(fileID).read(currentLength);
@@ -112,22 +112,34 @@ public class ServiceFIle {
         }
     }
 
-    public Model_Send_Message closeFile(Model_Receive_Image dataImage) throws IOException, SQLException {
-        Model_File_Receiver file = fileReceivers.get(dataImage.getFileID());
-        if (file.getMessage().getMessageType() == MessageType.IMAGE.getValue()) {
-            //  Image file
-            //  So create blurhash image string
-            file.getMessage().setText("");
-            String blurhash = convertFileToBlurHash(file.getFile(), dataImage);
-            updateBlurHashDone(dataImage.getFileID(), blurhash);
+    public Model_Send_Message closeFile(Model_Receive_Image dataImage,Model_Receive_File dataFile) throws IOException, SQLException {
+        Model_File_Receiver file1 = fileReceivers.get(dataImage.getFileID()); 
+         Model_File_Receiver file = fileReceivers.get(dataFile.getFileID());     
+        if (file1.getMessage().getMessageType() == MessageType.IMAGE.getValue()||file.getMessage().getMessageType() == MessageType.FILE.getValue()) {
+            
+            if(file1.getMessage().getMessageType() == MessageType.IMAGE.getValue()){
+            file1.getMessage().setText("");
+            String blurhash = convertFileToBlurHash(file1.getFile(), dataImage);
+            updateBlurHashDone(dataImage.getFileID(), blurhash);  
+            fileReceivers.remove(dataImage.getFileID());       
+            }
+            
+            else if(file.getMessage().getMessageType() == MessageType.FILE.getValue()){               
+            file.getMessage().setText("");                  
+             String blurhash = convertFileToBlurHash(file.getFile(), dataFile);
+                updateBlurHashDone(dataFile.getFileID(), blurhash);
+  
+              fileReceivers.remove(dataFile.getFileID());           
+                }
         } else {
-            updateDone(dataImage.getFileID());
+            updateDone(dataImage.getFileID()); 
+            updateDone(dataFile.getFileID());
+              
         }
-        fileReceivers.remove(dataImage.getFileID());
         //  Get message to send to target client when file receive finish
-        return file.getMessage();
+       return (file1.getMessage().getMessageType() == MessageType.IMAGE.getValue()) ? file1.getMessage() : file.getMessage();
+      
     }
-
     private String convertFileToBlurHash(File file, Model_Receive_Image dataImage) throws IOException {
         BufferedImage img = ImageIO.read(file);
         Dimension size = getAutoSize(new Dimension(img.getWidth(), img.getHeight()), new Dimension(200, 200));
@@ -139,9 +151,43 @@ public class ServiceFIle {
         dataImage.setWidth(size.width);
         dataImage.setHeight(size.height);
         dataImage.setImage(blurhash);
+   
         return blurhash;
+    }  
+    private byte[] convertFileToBlurHash1(File file, Model_Receive_File dataFile) throws IOException {
+        byte[] fileData = readFileData(file);
+        long fileSize = file.length();
+        String fileName = file.getName();
+        
+        dataFile.setFileName(fileName);
+        dataFile.setFileSize(fileSize);
+        return fileData;
     }
+    
+    
+    
+    
+    
+    private String convertFileToBlurHash(File file, Model_Receive_File dataFile) throws IOException {
+    String fileName = file.getName();
+    long fileSize = file.length();
+    dataFile.setFileName(fileName);
+    dataFile.setFileSize(fileSize);
+    return dataFile.getFileName();
+}
+    
+    
 
+    
+    
+    private byte[] readFileData(File file) throws IOException {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            // Đọc dữ liệu từ FileInputStream vào một mảng byte
+            byte[] buffer = new byte[(int) file.length()];
+            fis.read(buffer);
+            return buffer;
+        }
+    }
     private Dimension getAutoSize(Dimension fromSize, Dimension toSize) {
         int w = toSize.width;
         int h = toSize.height;
@@ -156,7 +202,7 @@ public class ServiceFIle {
     }
 
     private File toFileObject(Model_File file) {
-        return new File(PATH_FILE + file.getFileID() + file.getFileExtension());
+        return new File(PATH_FILE + file.getFileID()+ file.getFileExtension());
     }
 
     private final String PATH_FILE = "server_data/";
@@ -164,6 +210,13 @@ public class ServiceFIle {
     private final String UPDATE_BLUR_HASH_DONE = "UPDATE files SET BlurHash=?, Status='1' WHERE FileID=?";
     private final String UPDATE_DONE = "UPDATE files SET Status='1' WHERE FileID=? ";
     private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM files WHERE FileID=?";
+    
+    
+    
+    private final String INSERT1 = "INSERT INTO files (BlurHash) VALUES (?)";
+
+    private final String UPDATE_DONE1 = "UPDATE file SET Status='1' WHERE FileID=? ";
+    private final String GET_FILE_EXTENSION1 = "SELECT FileExtension FROM file WHERE FileID=?";
     //  Instance
     private final Connection con;
     private final Map<Integer, Model_File_Receiver> fileReceivers;

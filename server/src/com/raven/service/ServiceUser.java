@@ -47,7 +47,7 @@ public class ServiceUser {
                         con.commit();
                         message.setAction(true);
                         message.setMessage("Ok");
-                        message.setData(new Model_User_Account(userID, data.getUserName(), "", "", true));
+                        message.setData(new Model_User_Account(userID, data.getUserName(), "", true));
                     } else {
                         message.setAction(false);
                         message.setMessage("User insertion failed");
@@ -85,7 +85,7 @@ public class ServiceUser {
             String userName = r.getString(2);
             String gender = r.getString(3);
             String image = r.getString(4);
-            data = new Model_User_Account(userID, userName, gender, image, true);
+            data = new Model_User_Account(userID, userName, gender, true);
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -120,7 +120,7 @@ public class ServiceUser {
             String userName = r.getString(2);
             String gender = r.getString(3);
             String image = r.getString(4);
-            list.add(new Model_User_Account(userID, userName, gender, image, checkUserStatus(userID)));
+            list.add(new Model_User_Account(userID, userName, gender, checkUserStatus(userID)));
         }
         r.close();
         p.close();

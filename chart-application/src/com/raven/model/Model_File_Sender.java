@@ -2,11 +2,13 @@ package com.raven.model;
 
 import com.raven.event.EventFileSender;
 import com.raven.service.Service;
+import com.sun.source.tree.BreakTree;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.text.DecimalFormat;
 
 public class Model_File_Sender {
 
@@ -45,7 +47,13 @@ public class Model_File_Sender {
     public long getFileSize() {
         return fileSize;
     }
+    public String getFileName() {
+        return fileName;
+    }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
@@ -82,6 +90,7 @@ public class Model_File_Sender {
     private int fileID;
     private String fileExtensions;
     private File file;
+    private String fileName;
     private long fileSize;
     private RandomAccessFile accFile;
     private Socket socket;
@@ -117,16 +126,16 @@ public class Model_File_Sender {
     }
 
     public void startSend(int fileID) throws IOException {
-        this.fileID = fileID;
+        this.fileID = fileID;       
         if (event != null) {
             event.onStartSending();
         }
         sendingFile();
     }
-
     private void sendingFile() throws IOException {
         Model_Package_Sender data = new Model_Package_Sender();
         data.setFileID(fileID);
+        
         byte[] bytes = readFile();
         if (bytes != null) {
             data.setData(bytes);
@@ -162,7 +171,22 @@ public class Model_File_Sender {
             }
         });
     }
-
+    
+    public String getFileSizeConverted() {
+        double bytes = fileSize;
+        String[] fileSizeUnits = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+        String sizeToReturn;
+        DecimalFormat df = new DecimalFormat("0.#");
+        int index;
+        for (index = 0; index < fileSizeUnits.length; index++) {
+            if (bytes < 1024) {
+                break;
+            }
+            bytes = bytes / 1024;
+        }
+        sizeToReturn = df.format(bytes) + " " + fileSizeUnits[index];
+        return sizeToReturn;
+    }
     public double getPercentage() throws IOException {
         double percentage;
         long filePointer = accFile.getFilePointer();

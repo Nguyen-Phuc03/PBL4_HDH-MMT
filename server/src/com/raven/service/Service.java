@@ -13,6 +13,7 @@ import com.raven.model.Model_File;
 import com.raven.model.Model_Login;
 import com.raven.model.Model_Message;
 import com.raven.model.Model_Package_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Register;
@@ -90,6 +91,7 @@ public class Service {
                 try {
                     List<Model_User_Account> list = serviceUser.getUser(userID);
                     sioc.sendEvent("list_user", list.toArray());
+                    
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
@@ -102,27 +104,31 @@ public class Service {
             }
         });
         server.addEventListener("send_file", Model_Package_Sender.class, new DataListener<Model_Package_Sender>() {
-            @Override
-            public void onData(SocketIOClient sioc, Model_Package_Sender t, AckRequest ar) throws Exception {
-                try {
-                    serviceFile.receiveFile(t);
-                    if (t.isFinish()) {
-                        ar.sendAckData(true);
-                        Model_Receive_Image dataImage = new Model_Receive_Image();
-                        dataImage.setFileID(t.getFileID());
-                        Model_Send_Message message = serviceFile.closeFile(dataImage);
-                        //  Send to client 'message'
-                        sendTempFileToClient(message, dataImage);
-                        
-                    } else {
-                        ar.sendAckData(true);
-                    }
-                } catch (IOException | SQLException e) {
-                    ar.sendAckData(false);
-                    e.printStackTrace();
-                }
+    @Override
+    public void onData(SocketIOClient sioc, Model_Package_Sender t, AckRequest ar) throws Exception {
+        try {
+            serviceFile.receiveFile(t);
+            if (t.isFinish()) {
+                ar.sendAckData(true);
+                    Model_Receive_Image dataImage = new Model_Receive_Image();
+                     Model_Receive_File dataFile = new Model_Receive_File();
+                    dataFile.setFileID(t.getFileID());
+                    dataImage.setFileID(t.getFileID());
+                
+                   
+                    Model_Send_Message message = serviceFile.closeFile(dataImage,dataFile);
+                    sendTempFileToClient(message, dataImage,dataFile);
+                    textArea.append("client send file\n");
+             
+            } else {
+                ar.sendAckData(true);
             }
-        });
+        } catch (IOException | SQLException e) {
+            ar.sendAckData(false);
+            e.printStackTrace();
+        }
+    }
+});
         server.addEventListener("get_file", Integer.class, new DataListener<Integer>() {
             @Override
             public void onData(SocketIOClient sioc, Integer t, AckRequest ar) throws Exception {
@@ -169,33 +175,31 @@ public class Service {
     }
     
     private void sendToClient(Model_Send_Message data, AckRequest ar) {
-        if (data.getMessageType() == MessageType.IMAGE.getValue() || data.getMessageType() == MessageType.FILE.getValue()) {
+        if (data.getMessageType() == MessageType.IMAGE.getValue()|| data.getMessageType() == MessageType.FILE.getValue()) {
             try {
-                Model_File file = serviceFile.addFileReceiver(data.getText());
-                serviceFile.initFile(file, data);
-                ar.sendAckData(file.getFileID());
+                    Model_File file = serviceFile.addFileReceiver(data.getText());
+                    serviceFile.initFile(file, data);
+                    ar.sendAckData(file.getFileID());       
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         } else {
             for (Model_Client c : listClient) {
                 if (c.getUser().getUserID() == data.getToUserID()) {
-                    c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), null));
-                    break;
+                    c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), null,null));
+                     break;
                 }
             }
         }
-    }
-    
-    private void sendTempFileToClient(Model_Send_Message data, Model_Receive_Image dataImage) {
+    }  
+    private void sendTempFileToClient(Model_Send_Message data, Model_Receive_Image dataImage,Model_Receive_File dataFile) {
         for (Model_Client c : listClient) {
             if (c.getUser().getUserID() == data.getToUserID()) {
-                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), dataImage));
-                break;
+                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), dataImage,dataFile));               
+            break;
             }
         }
     }
-    
     public int removeClient(SocketIOClient client) {
         for (Model_Client d : listClient) {
             if (d.getClient() == client) {

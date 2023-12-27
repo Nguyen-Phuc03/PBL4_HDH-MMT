@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
  * @author RAVEN
  */
 public class Menu_Right extends javax.swing.JPanel {
-
     /**
      * Creates new form Menu_Left
      */
@@ -31,8 +30,6 @@ public class Menu_Right extends javax.swing.JPanel {
     private void initComponents() {
 
         menu = new javax.swing.JLayeredPane();
-        menuButton2 = new com.raven.component.MenuButton();
-        menuButton1 = new com.raven.component.MenuButton();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
@@ -40,43 +37,20 @@ public class Menu_Right extends javax.swing.JPanel {
         menu.setOpaque(true);
         menu.setLayout(new java.awt.GridLayout(1, 3));
 
-        menuButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/add-member.png"))); // NOI18N
-        menuButton2.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/add-member.png"))); // NOI18N
-        menuButton2.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/add-member.png"))); // NOI18N
-        menu.add(menuButton2);
-
-        menuButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
-        menuButton1.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
-        menuButton1.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/create_group.png"))); // NOI18N
-        menuButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuButton1ActionPerformed(evt);
-            }
-        });
-        menu.add(menuButton1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 488, Short.MAX_VALUE))
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void menuButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton1ActionPerformed
-
-    }//GEN-LAST:event_menuButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane menu;
-    private com.raven.component.MenuButton menuButton1;
-    private com.raven.component.MenuButton menuButton2;
     // End of variables declaration//GEN-END:variables
 }

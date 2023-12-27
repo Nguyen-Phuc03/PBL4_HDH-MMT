@@ -2,6 +2,8 @@ package com.raven.component;
 
 import com.raven.app.MessageType;
 import com.raven.emoji.Emogi;
+import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
 import com.raven.swing.ScrollBar;
@@ -9,6 +11,7 @@ import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.text.DecimalFormat;
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
@@ -41,12 +44,20 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setText("");
             item.setImage(data.getDataImage());
             item.setTime();
+            body.add(item, "wrap, w 100::80%");       
+        } else if (data.getMessageType() == MessageType.FILE) {
+            Chat_Left item = new Chat_Left();
+            item.setText("");      
+            String fileName = data.getFileName();
+            long fileSize =data.getFileSize();
+            item.setFile(data.getDataFile(), fileName,convertSize(fileSize)+"");
+            item.setTime();
             body.add(item, "wrap, w 100::80%");
         }
         repaint();
         revalidate();
     }
-
+     
     public void addItemLeft(String text, String user, String[] image) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
@@ -59,10 +70,10 @@ public class Chat_Body extends javax.swing.JPanel {
         body.revalidate();
     }
 
-    public void addItemFile(String text, String user, String fileName, String fileSize) {
+    public void addItemFile(String text,Model_Receive_File dataFile,String user, String fileName, String fileSize) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
-        item.setFile(fileName, fileSize);
+        item.setFile(dataFile,fileName, fileSize);
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
@@ -88,17 +99,40 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setImage(data.getFile());
             item.setTime();
             body.add(item, "wrap, al right, w 100::80%");
-
+        }
+        else if (data.getMessageType() == MessageType.FILE) {
+            Chat_Right item = new Chat_Right();
+            item.setText("");
+            String fileName = data.getFileName();
+            long fileSize = data.getFileSize();
+            item.setFile( data.getFile(),fileName, convertSize(fileSize) +"");
+            item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
         }
         repaint();
         revalidate();
         scrollToBottom();
     }
+    private static final String[] fileSizeUnits = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
 
-    public void addItemFileRight(String text, String fileName, String fileSize) {
+    private static String convertSize(double bytes) {
+        String sizeToReturn;
+        DecimalFormat df = new DecimalFormat("0.#");
+        int index;
+        for (index = 0; index < fileSizeUnits.length; index++) {
+            if (bytes < 1024) {
+                break;
+            }
+            bytes = bytes / 1024;
+        }
+        System.out.println("Systematic file size: " + bytes + " " + fileSizeUnits[index]);
+        sizeToReturn = df.format(bytes) + " " + fileSizeUnits[index];
+        return sizeToReturn;
+    }
+    public void addItemFileRight(Model_File_Sender fileSender,String text, String fileName, String fileSize) {
         Chat_Right item = new Chat_Right();
         item.setText(text);
-        item.setFile(fileName, fileSize);
+        item.setFile(fileSender,fileName, fileSize);
         body.add(item, "wrap, al right, w 100::80%");
         //  ::80% set max with 80%
         body.repaint();
@@ -118,7 +152,7 @@ public class Chat_Body extends javax.swing.JPanel {
         repaint();
         revalidate();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
