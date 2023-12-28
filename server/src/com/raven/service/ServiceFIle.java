@@ -66,7 +66,7 @@ public class ServiceFIle {
         p.close();
     }
     public void initFile(Model_File file, Model_Send_Message message) throws IOException {
-        fileReceivers.put(file.getFileID(), new Model_File_Receiver(message, toFileObject(file)));
+        fileReceivers.put(file.getFileID(), new Model_File_Receiver(message,toFileObject(file)));
     }
 
     public Model_File getFile(int fileID) throws SQLException {

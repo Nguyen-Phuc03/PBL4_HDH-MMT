@@ -1,42 +1,147 @@
 package com.raven.component;
 
 import com.raven.event.EventFileReceiver;
-import com.raven.event.PublicEvent;
-import com.raven.model.Model_File_Receiver;
+import com.raven.event.EventFileSender;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_File;
-import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
-import java.awt.Dimension;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Chat_File extends javax.swing.JPanel {
-
+     private EventFileReceiver event;
     public Chat_File() {
         initComponents();
         setOpaque(false);
       
     }
+    public void setFile(File document, Model_File_Sender fileSender) {
+           try {
+        fileSender.addEvent(new EventFileSender() {
+            @Override
+            public void onSending(double percentage) {
+                progress1.setValue((int) percentage);
+            }
 
-    public void setFile(String fileName, String size) {
+            @Override
+            public void onStartSending() {
+            }
+
+            @Override
+            public void onFinish() {
+                progress1.setVisible(false);
+            }
+        });
+        
+        Service.getInstance().addFile(document, fileSender.getMessage());
+        
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+  public void setDocument(Model_Receive_File dataDocument) {
+    try {
+        Service.getInstance().addFileReceiver(dataDocument.getFileID(), new EventFileReceiver() {
+            @Override
+            public void onReceiving(double percentage) {
+                progress1.setValue((int) percentage);
+            }
+            @Override
+            public void onStartReceiving() {
+            }
+            @Override
+            public void onFinish(File file) {
+                progress1.setVisible(false); 
+                
+            }
+        });
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}  
+public void addFile(Model_Receive_File dataFile) {
+    int idfile = dataFile.getFileID();
+    Chat_File pic = new Chat_File();  
+    pic.setDocument(dataFile);
+    addEvent(this,idfile); 
+}
+    private void addEvent(Component com,int idfile) {
+    com.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    com.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent me) {
+            if (SwingUtilities.isLeftMouseButton(me)) {             
+                        openFile(idfile);     
+            }
+        }
+         });
+        }
+    private void openFile(int idfile) {
+            String parentDirectoryPath = "client_data/";
+            String fileNameDocx = idfile + ".docx";
+            String fileNamePdf = idfile + ".pdf";
+
+             String filePathDocx = parentDirectoryPath + File.separator + fileNameDocx;
+                String filePathPdf = parentDirectoryPath + File.separator + fileNamePdf;
+
+                File fileToOpen;
+
+             if (new File(filePathDocx).exists()) {
+                 fileToOpen = new File(filePathDocx);
+             } else if (new File(filePathPdf).exists()) {
+                 fileToOpen = new File(filePathPdf);
+             } else {
+                 System.out.println("Không tìm thấy tệp: " + fileNameDocx + " hoặc " + fileNamePdf);
+                 return;
+                }
+                try {
+                    Desktop.getDesktop().open(fileToOpen);
+                    System.out.println("File opened: " + fileToOpen.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error opening file: " + e.getMessage());
+                }         
+        }
+   
+   
+    
+   
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+     public void setFile(String fileName, String size) {
         lbFileName.setText(fileName);
         lbFileSize.setText(size);
     }
@@ -47,12 +152,7 @@ public class Chat_File extends javax.swing.JPanel {
         File file = fileSender.getFile(); 
         addEvent(this,file);
         addFileComponent(file);
-}
-
-   public void addFile(Model_Receive_File dataFile) {
-    File_Item pic = new File_Item();    
-    pic.setDocument(dataFile); 
-    add(pic, "wrap");
+        jButton1.setVisible(false);
 }
    
     private void addFileComponent(File file) {
@@ -113,6 +213,7 @@ public class Chat_File extends javax.swing.JPanel {
         progress1 = new com.raven.swing.Progress();
         jPanel1 = new javax.swing.JPanel();
         lbFileName = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         lbFileSize = new javax.swing.JLabel();
 
         progress1.setProgressType(com.raven.swing.Progress.ProgressType.FILE);
@@ -122,6 +223,16 @@ public class Chat_File extends javax.swing.JPanel {
 
         lbFileName.setText("My File Name.file");
         jPanel1.add(lbFileName);
+
+        jButton1.setBackground(new java.awt.Color(242, 242, 242));
+        jButton1.setBorder(null);
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
 
         lbFileSize.setForeground(new java.awt.Color(7, 98, 153));
         lbFileSize.setText("5 MB");
@@ -149,8 +260,13 @@ public class Chat_File extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbFileName;
     private javax.swing.JLabel lbFileSize;
