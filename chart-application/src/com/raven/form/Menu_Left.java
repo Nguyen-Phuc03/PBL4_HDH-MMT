@@ -166,7 +166,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private void menuMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMessageActionPerformed
         if (!menuMessage.isSelected()) {
             menuMessage.setSelected(true);
-           // menuGroup.setSelected(false);
+//            menuGroup.setSelected(false);
            
             showMessage();
         }

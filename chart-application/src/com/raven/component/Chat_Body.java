@@ -44,20 +44,19 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setText("");
             item.setImage(data.getDataImage());
             item.setTime();
-            body.add(item, "wrap, w 100::80%");       
-        } else if (data.getMessageType() == MessageType.FILE) {
-            Chat_Left item = new Chat_Left();
-            item.setText("");      
-            String fileName = data.getFileName();
+            body.add(item, "wrap, w 100::80%");
+        }else if(data.getMessageType() == MessageType.FILE){
+             Chat_Left item = new Chat_Left();
+            item.setText("");
             long fileSize =data.getFileSize();
-            item.setFile(data.getDataFile(), fileName,convertSize(fileSize)+"");
+            item.setFile(data.getDataFile(),convertSize(fileSize)+"");
             item.setTime();
             body.add(item, "wrap, w 100::80%");
         }
         repaint();
         revalidate();
     }
-     
+
     public void addItemLeft(String text, String user, String[] image) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
@@ -70,10 +69,10 @@ public class Chat_Body extends javax.swing.JPanel {
         body.revalidate();
     }
 
-    public void addItemFile(String text,Model_Receive_File dataFile,String user, String fileName, String fileSize) {
+    public void addItemFile(String text,Model_Receive_File dataFile, String user, String fileSize) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
-        item.setFile(dataFile,fileName, fileSize);
+        item.setFile(dataFile,fileSize);
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
@@ -99,15 +98,15 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setImage(data.getFile());
             item.setTime();
             body.add(item, "wrap, al right, w 100::80%");
-        }
-        else if (data.getMessageType() == MessageType.FILE) {
+
+        }else if (data.getMessageType() == MessageType.FILE) {
             Chat_Right item = new Chat_Right();
             item.setText("");
-            String fileName = data.getFileName();
             long fileSize = data.getFileSize();
-            item.setFile( data.getFile(),fileName, convertSize(fileSize) +"");
+            item.setFile(data.getFile(), convertSize(fileSize) +"");
             item.setTime();
             body.add(item, "wrap, al right, w 100::80%");
+
         }
         repaint();
         revalidate();
@@ -129,10 +128,10 @@ public class Chat_Body extends javax.swing.JPanel {
         sizeToReturn = df.format(bytes) + " " + fileSizeUnits[index];
         return sizeToReturn;
     }
-    public void addItemFileRight(Model_File_Sender fileSender,String text, String fileName, String fileSize) {
+      public void addItemFileRight(Model_File_Sender fileSender,String text, String fileSize) {
         Chat_Right item = new Chat_Right();
         item.setText(text);
-        item.setFile(fileSender,fileName, fileSize);
+        item.setFile(fileSender, fileSize);
         body.add(item, "wrap, al right, w 100::80%");
         //  ::80% set max with 80%
         body.repaint();
@@ -152,7 +151,7 @@ public class Chat_Body extends javax.swing.JPanel {
         repaint();
         revalidate();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

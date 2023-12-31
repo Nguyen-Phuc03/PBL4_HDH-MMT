@@ -26,14 +26,6 @@ public class Model_User_Account {
         this.gender = gender;
     }
 
-//    public String getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(String image) {
-//        this.image = image;
-//    }
-
     public boolean isStatus() {
         return status;
     }
@@ -46,7 +38,6 @@ public class Model_User_Account {
         this.userID = userID;
         this.userName = userName;
         this.gender = gender;
-     //   this.image = image;
         this.status = status;
     }
 
@@ -56,6 +47,5 @@ public class Model_User_Account {
     private int userID;
     private String userName;
     private String gender;
-
     private boolean status;
 }

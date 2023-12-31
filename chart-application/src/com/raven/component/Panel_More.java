@@ -16,9 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -98,7 +95,9 @@ public class Panel_More extends javax.swing.JPanel {
                     }
                 }
             }
-        });
+        }
+        );
+       
         return cmd;
     }
 
@@ -109,8 +108,8 @@ public class Panel_More extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 JFileChooser ch = new JFileChooser();
-                ch.setMultiSelectionEnabled(true);
-                ch.setFileFilter(new FileFilter() {
+                 ch.setMultiSelectionEnabled(true);
+                 ch.setFileFilter(new FileFilter() {
                     @Override
                     public boolean accept(File file) {
                         return file.isDirectory() || isFile(file);
@@ -121,30 +120,26 @@ public class Panel_More extends javax.swing.JPanel {
                         return "File";
                     }
                 });
-                int option = ch.showOpenDialog(Main.getFrames()[0]);
-            if (option == JFileChooser.APPROVE_OPTION) {
-                File files[] = ch.getSelectedFiles();
-                for (File file : files) {
-                    Model_Send_Message message = new Model_Send_Message(MessageType.FILE, Service.getInstance().getUser().getUserID(), user.getUserID(), "");
-                    message.setFileName(file.getName());
-                    message.setFileSize(file.length());
-                    
+                 int option = ch.showOpenDialog(Main.getFrames()[0]);
+             if (option == JFileChooser.APPROVE_OPTION) {
+                    File files[] = ch.getSelectedFiles();
                     try {
-                        if (file.exists() && file.length() > 0) {
-                            Service.getInstance().addFile(file,message);
-                        } else {
-                            System.out.println("File is empty or not found: " + file.getAbsolutePath());
+                        for (File file : files) {
+                            Model_Send_Message message = new Model_Send_Message(MessageType.FILE, Service.getInstance().getUser().getUserID(), user.getUserID(), "");
+                            message.setFileSize(file.length());
+                            Service.getInstance().addFile(file, message);
+                            PublicEvent.getInstance().getEventChat().sendMessage(message);
                         }
-                    } catch (Exception ex) {
-                        Logger.getLogger(Panel_More.class.getName()).log(Level.SEVERE, null, ex);
-                    }    
-                    PublicEvent.getInstance().getEventChat().sendMessage(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
             }
         });
         return cmd;
-    }  
+    }
+  
+
     private JButton getEmojiStyle1() {
         OptionButton cmd = new OptionButton();
         cmd.setIcon(Emogi.getInstance().getImoji(1).toSize(25, 25).getIcon());
@@ -233,10 +228,9 @@ public class Panel_More extends javax.swing.JPanel {
         return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
     }
     private boolean isFile(File file) {
-    String name = file.getName().toLowerCase();
-    return name.endsWith(".doc") || name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".xls");
-}
-
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".doc") || name.endsWith(".pdf") || name.endsWith(".txt") || name.endsWith(".docx");
+    }
     private JPanel panelHeader;
     private JPanel panelDetail;
 

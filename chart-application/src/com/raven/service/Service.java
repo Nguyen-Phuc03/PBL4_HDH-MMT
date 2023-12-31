@@ -15,13 +15,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class Service {
     private static Service instance;
     private Socket client;
     private final int PORT_NUMBER = 12345;
-    //private final String IP = "172.20.10.4";
-  private final String IP = "localhost";
+    private final String IP = "localhost";
+ 
     private Model_User_Account user;
     private List<Model_File_Sender> fileSender;
     private List<Model_File_Receiver> fileReceiver;
@@ -73,8 +74,25 @@ public class Service {
                 @Override
                 public void call(Object... os) {
                     Model_Receive_Message message = new Model_Receive_Message(os[0]);
+                  //  System.out.println(message.get);
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
+            });
+            client.on("userOnline", new Emitter.Listener() {
+             @Override
+                 public void call(final Object... args) {
+                    String successMessage = (String) args[0];
+                    JOptionPane.showMessageDialog(null, successMessage, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            
+            });
+             client.on("checkuser", new Emitter.Listener() {
+             @Override
+                 public void call(final Object... args) {
+                    String successMessage = (String) args[0];
+                    JOptionPane.showMessageDialog(null, successMessage, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            
             });
             client.open();
         } catch (URISyntaxException e) {
@@ -86,18 +104,32 @@ public class Service {
         Model_File_Sender data = new Model_File_Sender(file, client, message);
         message.setFile(data);
         fileSender.add(data);
+        String filename=data.getFile().getName();
         //  For send file one by one
         if (fileSender.size() == 1) {
-            data.initSend();
+            data.initSend(filename);
         }
         return data;
     }
+//    public Model_File_Sender addFileForButtonFile(File file, Socket socket, Model_Send_Message message) throws IOException {
+//    Model_File_Sender data = new Model_File_Sender(file, socket, message);
+//    // Không gọi message.setFile(data) trong trường hợp này
+//    fileSender.add(data);
+//     String filename=data.getFile().getName();
+//    // For send file one by one
+//    if (fileSender.size() == 1) {
+//        data.initSend(filename);
+//    }
+//    return data;
+//}
+
 
     public void fileSendFinish(Model_File_Sender data) throws IOException {
         fileSender.remove(data);
+         String filename=data.getFile().getName();
         if (!fileSender.isEmpty()) {
             //  Start send new file when old file sending finish
-            fileSender.get(0).initSend();
+            fileSender.get(0).initSend(filename);
         }
     }
 

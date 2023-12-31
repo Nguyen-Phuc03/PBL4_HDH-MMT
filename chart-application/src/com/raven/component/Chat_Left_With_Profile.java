@@ -37,8 +37,8 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
       //  txt.setImage(false, image);
     }
 
-    public void setFile(Model_Receive_File dataFile,String fileName, String fileSize) {
-        txt.setFile(true, dataFile,fileName, fileSize);
+    public void setFile(Model_Receive_File dataFile, String fileSize) {
+         txt.setFile(true, dataFile,fileSize);
     }
 
     public void setTime() {

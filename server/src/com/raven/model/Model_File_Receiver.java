@@ -35,17 +35,12 @@ public class Model_File_Receiver {
         this.file = file;
         this.accFile = new RandomAccessFile(file, "rw");
     }
-    
+
     public Model_File_Receiver() {
     }
 
     private Model_Send_Message message;
     private File file;
-    private String fileName;
-
-    public String getFileName() {
-        return fileName;
-    }
     private RandomAccessFile accFile;
 
     public synchronized long writeFile(byte[] data) throws IOException {

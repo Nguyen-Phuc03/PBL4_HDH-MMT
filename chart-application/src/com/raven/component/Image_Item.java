@@ -36,7 +36,7 @@ public class Image_Item extends javax.swing.JLayeredPane {
         });
         pic.setImage(image);
     }
-
+ 
     public void setImage(Model_Receive_Image dataImage) {
         int width = dataImage.getWidth();
         int height = dataImage.getHeight();
@@ -60,14 +60,14 @@ public class Image_Item extends javax.swing.JLayeredPane {
                 @Override
                 public void onFinish(File file) {
                     progress.setVisible(false);
-                    pic.setImage(new ImageIcon(file.getAbsolutePath()));
+                    pic.setImage(new ImageIcon(file.getAbsolutePath()));                  
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
  * @author RAVEN
  */
 public class Menu_Right extends javax.swing.JPanel {
+
     /**
      * Creates new form Menu_Left
      */
@@ -29,28 +30,21 @@ public class Menu_Right extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        menu = new javax.swing.JLayeredPane();
-
         setBackground(new java.awt.Color(249, 249, 249));
-
-        menu.setBackground(new java.awt.Color(255, 255, 255));
-        menu.setOpaque(true);
-        menu.setLayout(new java.awt.GridLayout(1, 3));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+            .addGap(0, 29, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+            .addGap(0, 89, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLayeredPane menu;
     // End of variables declaration//GEN-END:variables
 }

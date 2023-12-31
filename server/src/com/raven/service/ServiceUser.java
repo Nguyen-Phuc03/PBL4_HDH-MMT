@@ -28,7 +28,7 @@ public class ServiceUser {
 
         if (rCheck.next()) {
             message.setAction(false);
-            message.setMessage("User Already Exists");
+            message.setMessage("Người dùng đã tồn tại!");
         } else {
             message.setAction(true);
             try (PreparedStatement pInsertUser = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -50,7 +50,7 @@ public class ServiceUser {
                         message.setData(new Model_User_Account(userID, data.getUserName(), "", true));
                     } else {
                         message.setAction(false);
-                        message.setMessage("User insertion failed");
+                        message.setMessage("Đăng ký người dùng thất bại!");
                     }
                 }
             }
@@ -84,7 +84,6 @@ public class ServiceUser {
             int userID = r.getInt(1);
             String userName = r.getString(2);
             String gender = r.getString(3);
-            String image = r.getString(4);
             data = new Model_User_Account(userID, userName, gender, true);
         }
     } catch (SQLException e) {
@@ -119,7 +118,6 @@ public class ServiceUser {
             int userID = r.getInt(1);
             String userName = r.getString(2);
             String gender = r.getString(3);
-            String image = r.getString(4);
             list.add(new Model_User_Account(userID, userName, gender, checkUserStatus(userID)));
         }
         r.close();

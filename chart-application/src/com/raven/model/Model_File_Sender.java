@@ -1,8 +1,8 @@
 package com.raven.model;
 
+import com.raven.app.MessageType;
 import com.raven.event.EventFileSender;
 import com.raven.service.Service;
-import com.sun.source.tree.BreakTree;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 import java.io.File;
@@ -47,13 +47,7 @@ public class Model_File_Sender {
     public long getFileSize() {
         return fileSize;
     }
-    public String getFileName() {
-        return fileName;
-    }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
@@ -89,8 +83,7 @@ public class Model_File_Sender {
     private Model_Send_Message message;
     private int fileID;
     private String fileExtensions;
-    private File file;
-    private String fileName;
+    public File file;
     private long fileSize;
     private RandomAccessFile accFile;
     private Socket socket;
@@ -109,33 +102,45 @@ public class Model_File_Sender {
         }
     }
 
-    public void initSend() throws IOException {
+    public void initSend(String filename) throws IOException {
         socket.emit("send_to_user", message.toJsonObject(), new Ack() {
             @Override
             public void call(Object... os) {
                 if (os.length > 0) {
+                    if(message.getMessageType() != null && message.getMessageType() == MessageType.IMAGE){
                     int fileID = (int) os[0];
                     try {
-                        startSend(fileID);
+                        startSend(fileID,filename);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }else{
+                         int fileID = (int) os[0];
+                    try {
+                        startSend(fileID,filename);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     }
                 }
             }
         });
     }
 
-    public void startSend(int fileID) throws IOException {
-        this.fileID = fileID;       
+    public void startSend(int fileID,String filename) throws IOException {
+        this.fileID = fileID;
         if (event != null) {
             event.onStartSending();
         }
-        sendingFile();
+        sendingFile(filename);
     }
-    private void sendingFile() throws IOException {
+
+    private void sendingFile(String filename) throws IOException {
         Model_Package_Sender data = new Model_Package_Sender();
-        data.setFileID(fileID);
         
+        data.setType(message.getMessageType());
+        data.setFileID(fileID);
+        data.setNameFile(filename);
         byte[] bytes = readFile();
         if (bytes != null) {
             data.setData(bytes);
@@ -155,7 +160,7 @@ public class Model_File_Sender {
                                 if (event != null) {
                                     event.onSending(getPercentage());
                                 }
-                                sendingFile();
+                                sendingFile(filename);
                             } else {
                                 //  File send finish
                                 Service.getInstance().fileSendFinish(Model_File_Sender.this);
@@ -171,7 +176,6 @@ public class Model_File_Sender {
             }
         });
     }
-    
     public String getFileSizeConverted() {
         double bytes = fileSize;
         String[] fileSizeUnits = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};

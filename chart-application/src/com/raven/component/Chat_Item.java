@@ -78,23 +78,24 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.add(chatImage);
         add(layer);
     }
-    public void setFile(boolean right,Model_File_Sender fileSender,String fileName, String fileSize) {
+    
+     public void setFile(boolean right, Model_File_Sender fileSender, String fileSize ) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
         Chat_File chatFile = new Chat_File();
-        chatFile.setFile(fileName, fileSize);
+        chatFile.setFile(fileSize);
         chatFile.addFile(fileSender);
         layer.add(chatFile);
         add(layer);
 
     }
-    public void setFile(boolean right, Model_Receive_File dataFile,String fileName, String fileSize) {
+    public void setFile(boolean  right,Model_Receive_File dataFile, String fileSize) {
         JLayeredPane layer = new JLayeredPane();
-        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+       layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
         Chat_File chatFile = new Chat_File();
-        chatFile.setFile(fileName, fileSize);
+        chatFile.setFile(fileSize);
         chatFile.addFile(dataFile);
         layer.add(chatFile);
         add(layer);

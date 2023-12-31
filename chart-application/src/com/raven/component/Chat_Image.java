@@ -3,11 +3,13 @@ package com.raven.component;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Image;
+import com.raven.swing.blurHash.BlurHash;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -30,10 +32,13 @@ public class Chat_Image extends javax.swing.JLayeredPane {
     }
 
     public void addImage(Model_Receive_Image dataImage) {
-        Image_Item pic = new Image_Item(); 
-        pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));
-        pic.setImage(dataImage);     
-        //addEvent(pic,dataImage);
+        Image_Item pic = new Image_Item();
+        pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));       
+        Icon image = new ImageIcon(dataImage.getImage());
+        pic.setImage(dataImage);
+        
+        
+        addEvent(pic, image);
         add(pic, "wrap");
     }
 
@@ -48,6 +53,7 @@ public class Chat_Image extends javax.swing.JLayeredPane {
             }
         });
     }
+
     private Dimension getAutoSize(Icon image, int w, int h) {
         if (w > image.getIconWidth()) {
             w = image.getIconWidth();

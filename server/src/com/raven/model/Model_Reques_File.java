@@ -9,13 +9,7 @@ public class Model_Reques_File {
     public void setFileID(int fileID) {
         this.fileID = fileID;
     }
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 
-    public String getFileName() {
-        return fileName;
-    }
     public long getCurrentLength() {
         return currentLength;
     }
@@ -34,6 +28,4 @@ public class Model_Reques_File {
 
     private int fileID;
     private long currentLength;
-    private String fileName;
-
 }

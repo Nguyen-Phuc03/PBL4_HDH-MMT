@@ -1,5 +1,6 @@
 package com.raven.model;
 
+import com.raven.event.EventFileSender;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +54,7 @@ public class Model_Receive_Image {
             width = obj.getInt("width");
             height = obj.getInt("height");
         } else {
-           // System.out.println("lỗi ở receive_image");
+            System.err.println("One or more keys are missing in the JSON object.");
         }
     } catch (JSONException e) {
         e.printStackTrace();
@@ -65,7 +66,7 @@ public class Model_Receive_Image {
     private String image;
     private int width;
     private int height;
-
+    private EventFileSender event;
     public JSONObject toJsonObject() {
         JSONObject json = new JSONObject();
 
@@ -83,4 +84,5 @@ public class Model_Receive_Image {
 
         return json;
     }
+   
 }

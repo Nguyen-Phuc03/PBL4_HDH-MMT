@@ -41,22 +41,6 @@ public class Model_Send_Message {
     public Model_File_Sender getFile() {
         return file;
     }
-       public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-        this.fileSize = fileSize;
-    }
-
 
     public void setFile(Model_File_Sender file) {
         this.file = file;
@@ -72,13 +56,20 @@ public class Model_Send_Message {
     public Model_Send_Message() {
     }
 
-    private MessageType messageType;
+    public MessageType messageType;
     private int fromUserID;
     private int toUserID;
     private String text;
-    private Model_File_Sender file;   
-    private String fileName;
+    private Model_File_Sender file;
     private long fileSize;
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
@@ -87,7 +78,6 @@ public class Model_Send_Message {
             json.put("toUserID", toUserID);
             if (messageType == MessageType.FILE || messageType == MessageType.IMAGE) {
                 json.put("text", file.getFileExtensions());
-                json.put("fileName", fileName);
                 json.put("fileSize", fileSize);
             } else {
                 json.put("text", text);

@@ -3,7 +3,7 @@ package com.raven.model;
 public class Model_Send_Message {
 
     public int getMessageType() {
-        return messageType;
+    return messageType;
     }
 
     public void setMessageType(int messageType) {

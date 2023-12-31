@@ -31,8 +31,8 @@ public class Chat_Left extends javax.swing.JLayeredPane {
         txt.setImage(false, dataImage);
     }
 
-    public void setFile(Model_Receive_File dataFile,String fileName, String fileSize) {
-        txt.setFile(false,dataFile,fileName, fileSize);
+    public void setFile(Model_Receive_File dataFile,String fileSize) {
+       txt.setFile(false, dataFile,fileSize);
     }
 
     public void setEmoji(Icon icon) {
